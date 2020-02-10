@@ -1,0 +1,23 @@
+name: Simple Sinatra App CI
+
+on:
+  push:
+    branches:
+    - develop
+
+jobs:
+  build:
+    name: copy aws cloudformation templates to s3 bucket
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: build cloudformation templates and sync to s3 bucket
+      uses: ./.github/build
+      env:
+        SOURCE_DIR: '/github/workspace/templates'
+        AWS_S3_BUCKET: 'simple-sinatra-app-dev-infrastructure'
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_KEY_SECRET }}
+        AWS_REGION: ap-southeast-2
