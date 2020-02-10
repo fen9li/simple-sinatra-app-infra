@@ -2,22 +2,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: simple sinatra app infrastructure stack
 Parameters:
-  env:
+  Environment:
     Description: Environment name to provision resources
     Type: String
     AllowedValues: ["dev", "prod"]
     Default: dev
 
 Resources:
-  VpcStack:
+  S3Stack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        env: !Ref env
-      TemplateURL: http://simple-sinatra-app-infrastructure.s3.amazonaws.com/nested/vpc.yaml
+        Environment: !Ref Environment
+      TemplateURL: https://s3.amazonaws.com/simple-sinatra-app-dev-infrastructure/nested/s3.yaml
       TimeoutInMinutes: '5'
 
 Outputs:
-  VpcId:
-    Description: The ID of the VPC that this stack is deployed in
-    Value: !GetAtt VpcStack.Outputs.VpcId
+  S3BucketSecureURL:
+    Description: S3 bucket secure url
+    Value: !GetAtt S3Stack.Outputs.S3BucketSecureURL
