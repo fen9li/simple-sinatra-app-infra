@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: copy aws cloudformation templates to s3 bucket
+    name: deploy aws cloudformation templates
     runs-on: ubuntu-latest
 
     steps:
