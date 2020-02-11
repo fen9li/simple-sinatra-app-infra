@@ -4,14 +4,10 @@ set -e
 
 mkdir -p ~/.aws
 touch ~/.aws/credentials
-touch ~/.aws/config
 
 echo "[default]
 aws_access_key_id = ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" > ~/.aws/credentials
-
-echo "[default]
-region = ${AWS_REGION}" > ~/.aws/config
 
 echo 'Uploading CloudFormation Templates to s3 bucket ...'
 aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} --delete --region ${AWS_REGION}

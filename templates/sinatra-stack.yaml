@@ -16,8 +16,27 @@ Resources:
         Environment: !Ref Environment
       TemplateURL: https://s3.amazonaws.com/simple-sinatra-app-dev-infrastructure/nested/s3.yaml
       TimeoutInMinutes: '5'
+  VpcStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Environment: !Ref Environment
+      TemplateURL: https://s3.amazonaws.com/simple-sinatra-app-dev-infrastructure/nested/vpc.yaml
+      TimeoutInMinutes: '5'
 
 Outputs:
   S3BucketSecureURL:
     Description: S3 bucket secure url
     Value: !GetAtt S3Stack.Outputs.S3BucketSecureURL
+
+  VPC:
+    Description: A reference to the created VPC
+    Value: !GetAtt VpcStack.Outputs.VPC
+
+  PublicSubnets:
+    Description: A list of the public subnets
+    Value: !GetAtt VpcStack.Outputs.PublicSubnets
+
+  PrivateSubnets:
+    Description: A list of the private subnets
+    Value: !GetAtt VpcStack.Outputs.PublicSubnets
