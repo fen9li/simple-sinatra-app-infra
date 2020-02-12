@@ -1,0 +1,58 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+    Policy to Allow EC2 instance full access to S3 & CloudWatch.
+    Policy to Allow EC2 VPC Logs to CloudWatch
+
+Parameters:
+  Environment:
+    Description: Environment name to provision resources
+    Type: String
+    AllowedValues: ["dev", "prod"]
+    Default: dev
+  Project:
+    Description: Project name
+    Type: String
+    AllowedValues: ["simple-sinatra-infra"]
+    Default: simple-sinatra-infra
+
+Mappings: 
+  ECSServiceRoleName: 
+    dev: 
+      Name: "simple-sinatra-infra-dev-ecs-service-role"
+    prod: 
+      Name: "simple-sinatra-infra-prod-ecs-service-role"
+
+Resources:
+  IAMECSServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole'
+      AssumeRolePolicyDocument:
+        Version: '2008-10-17'
+        Statement:
+        - Effect: 'Allow'
+          Principal:
+            Service: 'ecs.amazonaws.com'
+          Action: 'sts:AssumeRole'
+      RoleName: !FindInMap
+        - ECSServiceRoleName
+        - !Ref Environment
+        - Name
+      Tags: 
+        - Key: project
+          Value: !Ref Project
+        - Key: createby
+          Value: "fen9li cloudformation stacks"
+        - Key: chargeto
+          Value: !Ref Environment
+
+Outputs:
+  IAMECSServiceRoleArn:
+    Description: "Role ARN to Allow EC2 instance full access to S3 & CloudWatch"
+    Value: !GetAtt "IAMECSServiceRole.Arn"
+  IAMECSServiceRole:
+    Description: "Policy to Allow EC2 instance full access to S3 & CloudWatch"
+    Value: !Ref "IAMECSServiceRole" 

@@ -23,6 +23,13 @@ Resources:
         Environment: !Ref Environment
       TemplateURL: https://s3.amazonaws.com/simple-sinatra-app-dev-infrastructure/nested/vpc.yaml
       TimeoutInMinutes: '5'
+  IamStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Environment: !Ref Environment
+      TemplateURL: https://s3.amazonaws.com/simple-sinatra-app-dev-infrastructure/nested/iam.yaml
+      TimeoutInMinutes: '5'
 
 Outputs:
   S3BucketSecureURL:
@@ -40,3 +47,11 @@ Outputs:
   PrivateSubnets:
     Description: A list of the private subnets
     Value: !GetAtt VpcStack.Outputs.PublicSubnets
+
+  IAMECSServiceRoleArn:
+    Description: Role ARN to Allow EC2 instance full access to S3 & CloudWatch
+    Value: !GetAtt IamStack.Outputs.IAMECSServiceRoleArn
+
+  IAMECSServiceRole:
+    Description: Policy to Allow EC2 instance full access to S3 & CloudWatch
+    Value: !GetAtt IamStack.Outputs.IAMECSServiceRole
